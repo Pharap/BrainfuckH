@@ -14,8 +14,8 @@ module Brainfuck.Node where
         | LoopNode Node
         deriving Show
 
-    --execute :: (Monad m, Show a, Num a) => Node -> TapeState a m ()
-    execute :: (Show a, Eq a, Num a) => Node -> TapeState a IO ()
+    --execute :: (Monad m, Show a, Num a) => Node -> TapeStateT a m ()
+    execute :: (Show a, Eq a, Num a) => Node -> TapeStateT a IO ()
     execute LeftNode = left
     execute RightNode = right
     execute IncrementNode = increment
