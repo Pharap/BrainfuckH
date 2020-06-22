@@ -1,8 +1,8 @@
-module Zip.State where
+module Zip.StateT where
     import qualified Zip as Z
     import Control.Monad.Trans.State.Lazy
 
-    type StateZip a = State (Z.Zip a)
+    type ZipStateT a m = StateT (Z.Zip a) m
 
     emptyZip :: Z.Zip a
     emptyZip = Z.emptyZip
@@ -19,91 +19,91 @@ module Zip.State where
     zipToList :: Z.Zip a -> [a]
     zipToList = Z.zipToList
 
-    nullLeft :: StateZip a Bool
+    nullLeft :: Monad m => ZipStateT a m Bool
     nullLeft = gets Z.nullLeft
 
-    nullRight :: StateZip a Bool
+    nullRight :: Monad m => ZipStateT a m Bool
     nullRight = gets Z.nullRight
 
-    headLeft :: StateZip a a
+    headLeft :: Monad m => ZipStateT a m a
     headLeft = gets Z.headLeft
 
-    headRight :: StateZip a a
+    headRight :: Monad m => ZipStateT a m a
     headRight = gets Z.headRight
 
-    tailLeft :: StateZip a [a]
+    tailLeft :: Monad m => ZipStateT a m [a]
     tailLeft = gets Z.tailLeft
 
-    tailRight :: StateZip a [a]
+    tailRight :: Monad m => ZipStateT a m [a]
     tailRight = gets Z.tailRight
 
-    updateLeft :: (a -> a) -> StateZip a ()
+    updateLeft :: Monad m => (a -> a) -> ZipStateT a m ()
     updateLeft f = modify (Z.updateLeft f)
 
-    updateRight :: (a -> a) -> StateZip a ()
+    updateRight :: Monad m => (a -> a) -> ZipStateT a m ()
     updateRight f = modify (Z.updateRight f)
 
-    consLeft :: a -> StateZip a ()
+    consLeft :: Monad m => a -> ZipStateT a m ()
     consLeft x = modify (Z.consLeft x)
 
-    consRight :: a -> StateZip a ()
+    consRight :: Monad m => a -> ZipStateT a m ()
     consRight x = modify (Z.consRight x)
 
-    unconsLeft :: StateZip a a
+    unconsLeft :: Monad m => ZipStateT a m a
     unconsLeft = gets Z.unconsLeft >>= f
         where f = maybe (fail "") (\(x, zip) -> put zip >> gets (const x))
 
-    unconsRight :: StateZip a a
+    unconsRight :: Monad m => ZipStateT a m a
     unconsRight = gets Z.unconsRight >>= f
         where f = maybe (fail "") (\(x, zip) -> put zip >> gets (const x))
 
-    rewindLeft :: StateZip a ()
+    rewindLeft :: Monad m => ZipStateT a m ()
     rewindLeft = modify Z.rewindLeft
 
-    rewindRight :: StateZip a ()
+    rewindRight :: Monad m => ZipStateT a m ()
     rewindRight = modify Z.rewindRight
 
-    scrollLeft :: StateZip a ()
+    scrollLeft :: Monad m => ZipStateT a m ()
     scrollLeft = modify Z.scrollLeft
 
-    scrollRight :: StateZip a ()
+    scrollRight :: Monad m => ZipStateT a m ()
     scrollRight = modify Z.scrollRight
 
-    skipLeft :: Int -> StateZip a ()
+    skipLeft :: Monad m => Int -> ZipStateT a m ()
     skipLeft n = modify (Z.skipLeft n)
 
-    skipRight :: Int -> StateZip a ()
+    skipRight :: Monad m => Int -> ZipStateT a m ()
     skipRight n = modify (Z.skipRight n)
 
-    reverseZip :: StateZip a ()
+    reverseZip :: Monad m => ZipStateT a m ()
     reverseZip = modify Z.reverseZip
 
-    dropLeft :: Int -> StateZip a ()
+    dropLeft :: Monad m => Int -> ZipStateT a m ()
     dropLeft n = modify (Z.dropLeft n)
 
-    dropRight :: Int -> StateZip a ()
+    dropRight :: Monad m => Int -> ZipStateT a m ()
     dropRight n = modify (Z.dropRight n)
 
-    takeLeft :: Int -> StateZip a ()
+    takeLeft :: Monad m => Int -> ZipStateT a m ()
     takeLeft n = modify (Z.takeLeft n)
 
-    takeRight :: Int -> StateZip a ()
+    takeRight :: Monad m => Int -> ZipStateT a m ()
     takeRight n = modify (Z.takeRight n)
 
-    findLeft :: (a -> Bool) -> StateZip a ()
+    findLeft :: Monad m => (a -> Bool) -> ZipStateT a m ()
     findLeft p = gets (Z.findLeft p) >>= (maybe (fail "") put)
 
-    findRight :: (a -> Bool) -> StateZip a ()
+    findRight :: Monad m => (a -> Bool) -> ZipStateT a m ()
     findRight p = gets (Z.findRight p) >>= (maybe (fail "") put)
 
-    --scrollExLeft :: a -> StateZip a ()
+    --scrollExLeft :: Monad m => a -> ZipStateT a m ()
     --scrollExLeft x = modify (Z.scrollExLeft x)
 
-    --scrollExRight :: a -> StateZip a ()
+    --scrollExRight :: Monad m => a -> ZipStateT a m ()
     --scrollExRight x = modify (Z.scrollExRight x)
 
-    --updateExLeft :: a -> (a -> a) -> StateZip a ()
+    --updateExLeft :: Monad m => a -> (a -> a) -> ZipStateT a m ()
     --updateExLeft x f = modify (Z.updateExLeft x f)
 
-    --updateExRight :: a -> (a -> a) -> StateZip a ()
+    --updateExRight :: Monad m => a -> (a -> a) -> ZipStateT a m ()
     --updateExRight x f = modify (Z.updateExRight x f)
