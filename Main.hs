@@ -10,7 +10,7 @@ main = do
     -- Get a line of input
     line <- getLine
     let
-        -- Parse the input into a Node structurs
+        -- Parse the input into a Node structure
         node = parseF line
         -- Make a Tape of 10 cells initialised with 0
         tape = fillTape 10 0
